@@ -3,6 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +39,30 @@ public class userController {
         userAddResDTO.setGender(user.getGender());
 
         return new ResponseEntity<>(userAddResDTO, HttpStatus.CREATED);
+    } 
+
+    // @RequestHeader("Authorization") String token
+    @DeleteMapping("")  
+    @Operation(summary = "deleteUser", description = "회원탈퇴 API")
+    public String deleteUser() {  
+        
+        String email = "jhseo@gmail.com";
+
+        // 이메일로 사용자를 조회  
+        User user = userService.getUserByEmail(email); 
+        
+        // 사용자 삭제  
+        userService.deleteUser(user);  
+
+        // 삭제된 사용자 정보를 담은 응답 생성  
+        UserAddResDTO userAddResDTO = new UserAddResDTO();  
+        userAddResDTO.setUserId(user.getEmail());  
+        userAddResDTO.setNickname(user.getNickname());  
+        userAddResDTO.setBirthdate(user.getBirthdate());  
+        userAddResDTO.setIsPublic(user.getIsPublic());  
+        userAddResDTO.setGender(user.getGender());  
+  
+        return "삭제 완료";
     } 
   
     @GetMapping("")  
