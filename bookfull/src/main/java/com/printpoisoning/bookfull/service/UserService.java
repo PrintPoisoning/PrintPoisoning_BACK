@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.printpoisoning.bookfull.dto.request.UserAddReqDTO;
 import com.printpoisoning.bookfull.dto.request.UserUpdateReqDTO;
+import com.printpoisoning.bookfull.dto.response.LoginResDTO;
 import com.printpoisoning.bookfull.entity.User;
 import com.printpoisoning.bookfull.repository.UserRepository;
 @Service  
@@ -13,14 +14,14 @@ public class UserService {
     @Autowired  
     private UserRepository userRepository;  
   
-    public User createUser(UserAddReqDTO userDTO) {  
-        String mail = "jhseo@gmail.com";
+    public User createUser(UserAddReqDTO userDTO, String email) {  
+        
         User user = new User();  
         user.setNickname(userDTO.getNickname());  
-        user.setEmail(mail);  
+        user.setEmail(email);  
         user.setBirthdate(userDTO.getBirthdate());  
         user.setIsPublic(userDTO.getIsPublic());  
-        user.setCreatedBy(mail);  
+        user.setCreatedBy(email);  
   
         // Gender가 null이거나 빈 문자열인 경우 'other'로 설정  
         if (userDTO.getGender() == null || userDTO.getGender().trim().isEmpty()) {  
@@ -47,6 +48,22 @@ public class UserService {
             }  
             if (userUpdateReqDTO.getGender() != null) {  
                 user.setGender(userUpdateReqDTO.getGender());  
+            }  
+            return userRepository.save(user);  
+        } else {  
+            // 예외 처리 또는 오류 응답 리턴  
+            throw new RuntimeException("User not found with email: " + email);  
+        } 
+    } 
+
+    public User updateUser(LoginResDTO loginResDTO, String email) {  
+        User user = userRepository.findByEmail(email);  
+        if (user != null) {  
+            if (loginResDTO.getAccessToken() != null) {  
+                user.setAccessToken(loginResDTO.getAccessToken());  
+            }  
+            if (loginResDTO.getRefreshToken() != null) {  
+                user.setRefreshToken(loginResDTO.getRefreshToken());  
             }  
             return userRepository.save(user);  
         } else {  

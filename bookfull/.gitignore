@@ -38,3 +38,6 @@ out/
 
 # Ignoring application.properties files  
 src/main/resources/application.properties  
+
+# Ignore .env files
+.env
