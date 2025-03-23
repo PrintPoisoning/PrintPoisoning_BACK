@@ -49,7 +49,7 @@ jobs:
         run: ls -al  
       - name: Move downloaded artifact to target directory  
         run: |  
-          JAR_FILE=$(ls *.jar)  
+          JAR_FILE=$(ls *.jar | head -n 1)  
           echo "Found JAR file: $JAR_FILE"  
           mv "$JAR_FILE" app.jar  
       - name: Login to Azure  
