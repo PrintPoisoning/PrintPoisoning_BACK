@@ -22,7 +22,7 @@ jobs:
           distribution: 'microsoft'  
   
       - name: Build with Gradle  
-        run: ./gradlew build  
+        run: gradlew.bat build  
   
       - name: Upload artifact for deployment job  
         uses: actions/upload-artifact@v4  
