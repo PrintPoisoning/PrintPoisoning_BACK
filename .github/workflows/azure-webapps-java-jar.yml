@@ -1,9 +1,9 @@
 name: Build and deploy JAR app to Azure Web App  
   
 env:    
-  AZURE_WEBAPP_NAME: app-printpoisoning-bookfull-api  # set this to the name of your Azure Web App    
-  JAVA_VERSION: '21'                  # set this to the Java version to use    
-  DISTRIBUTION: zulu                  # set this to the Java distribution  
+  AZURE_WEBAPP_NAME: app-printpoisoning-bookfull-api  # Azure Web App의 이름으로 설정    
+  JAVA_VERSION: '21'                  # 사용할 Java 버전으로 설정    
+  DISTRIBUTION: zulu                  # 사용할 Java 배포판으로 설정  
   
 on:    
   push:      
@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v4          
         with:            
           name: java-app            
-          path: 'build/libs/*.jar'  # Adjust this path if needed  
+          path: 'build/libs/*.jar'  # 필요에 따라 경로 조정  
   
   deploy:      
     permissions:        
