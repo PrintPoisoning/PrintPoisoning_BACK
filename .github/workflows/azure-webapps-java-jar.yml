@@ -27,25 +27,22 @@ jobs:
           cache: 'gradle'  
   
       - name: Grant execute permission for gradlew  
-        run: chmod +x gradlew  
+        run: chmod +x bookfull/gradlew  
         
       - name: Build with Gradle            
-        run: ./gradlew clean build    
+        run: bookfull/gradlew clean build    
   
       - name: Upload artifact for deployment job          
         uses: actions/upload-artifact@v4          
         with:            
           name: java-app            
-          path: 'build/libs/*.jar'  # 필요에 따라 경로 조정  
+          path: 'bookfull/build/libs/*.jar'  # 필요에 따라 경로 조정  
   
   deploy:      
     permissions:        
       contents: none      
     runs-on: ubuntu-latest      
     needs: build      
-    environment:        
-      name: 'Development'        
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}  
   
     steps:        
       - name: Download artifact from build job          
