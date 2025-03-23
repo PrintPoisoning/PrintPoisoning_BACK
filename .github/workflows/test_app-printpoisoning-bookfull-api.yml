@@ -16,19 +16,19 @@ jobs:
       - name: Set up Java version  
         uses: actions/setup-java@v4  
         with:  
-          java-version: '21'  
-          distribution: 'microsoft'
+          java-version: '21'  # 올바른 SemVer 표기법 사용  
+          distribution: 'microsoft'  
       - name: Grant execute permission for gradlew  
         run: chmod +x ./gradlew  
-        working-directory: bookfull 
+        working-directory: bookfull  # Gradle 프로젝트 디렉토리 설정  
       - name: Build with Gradle  
-        run: ./gradlew clean build
-        working-directory: bookfull 
+        run: ./gradlew clean build  
+        working-directory: bookfull  # Gradle 프로젝트 디렉토리 설정  
       - name: Upload artifact for deployment job  
         uses: actions/upload-artifact@v4  
         with:  
           name: java-app  
-          path: 'bookfull/build/libs/*.jar'  
+          path: 'bookfull/build/libs/*.jar'  # 빌드 결과물 경로 설정  
   
   deploy:  
     runs-on: ubuntu-latest  
@@ -43,9 +43,12 @@ jobs:
       - name: Download artifact from build job  
         uses: actions/download-artifact@v4  
         with:  
-          name: java-app
-      - name: Copy artifact to target directory  
-        run: cp bookfull/build/libs/*.jar app.jar  
+          name: java-app  
+          path: ./  # 현재 디렉토리에 아티팩트 다운로드  
+      - name: List files in current directory for debugging  
+        run: ls -al  
+      - name: Move downloaded artifact to target directory  
+        run: mv *.jar app.jar  
       - name: Login to Azure  
         uses: azure/login@v2  
         with:  
@@ -58,4 +61,4 @@ jobs:
         with:  
           app-name: 'app-printpoisoning-bookfull-api'  
           slot-name: 'Production'  
-          package: 'app.jar'
+          package: 'app.jar'  # 특정 파일 지정  
