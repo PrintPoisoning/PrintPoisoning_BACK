@@ -1,59 +1,60 @@
 name: Build and deploy JAR app to Azure Web App  
   
-env:    
-  AZURE_WEBAPP_NAME: app-printpoisoning-bookfull-api  # Azure Web App의 이름으로 설정    
-  JAVA_VERSION: '21'                  # 사용할 Java 버전으로 설정    
+env:  
+  AZURE_WEBAPP_NAME: app-printpoisoning-bookfull-api  # Azure Web App의 이름으로 설정  
+  JAVA_VERSION: '21'                  # 사용할 Java 버전으로 설정  
   DISTRIBUTION: zulu                  # 사용할 Java 배포판으로 설정  
   
-on:    
-  push:      
-    branches: [ "dev" ]    
+on:  
+  push:  
+    branches: [ "dev" ]  
   workflow_dispatch:  
   
-permissions:    
+permissions:  
   contents: read  
   
-jobs:    
-  build:      
+jobs:  
+  build:  
     runs-on: ubuntu-latest  
-    steps:        
-      - uses: actions/checkout@v3  
-        
-      - name: Set up Java version          
-        uses: actions/setup-java@v4          
-        with:            
-          java-version: ${{ env.JAVA_VERSION }}            
-          distribution: ${{ env.DISTRIBUTION }}            
-          cache: 'gradle'  
   
-      - name: Grant execute permission for gradlew  
-        run: chmod +x bookfull/gradlew  
-        
-      - name: Build with Gradle            
-        run: bookfull/gradlew clean build    
+    steps:  
+    - uses: actions/checkout@v3  
   
-      - name: Upload artifact for deployment job          
-        uses: actions/upload-artifact@v4          
-        with:            
-          name: java-app            
-          path: 'bookfull/build/libs/*.jar'  # 필요에 따라 경로 조정  
+    - name: Set up Java version  
+      uses: actions/setup-java@v4  
+      with:  
+        java-version: ${{ env.JAVA_VERSION }}  
+        distribution: ${{ env.DISTRIBUTION }}  
+        cache: 'gradle'  
   
-  deploy:      
-    permissions:        
-      contents: none      
-    runs-on: ubuntu-latest      
-    needs: build      
+    - name: Grant execute permission for gradlew  
+      run: chmod +x bookfull/gradlew  
   
-    steps:        
-      - name: Download artifact from build job          
-        uses: actions/download-artifact@v4          
-        with:            
-          name: java-app  
+    - name: Build with Gradle  
+      run: bookfull/gradlew clean build  
   
-      - name: Deploy to Azure Web App          
-        id: deploy-to-webapp          
-        uses: azure/webapps-deploy@v2          
-        with:            
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}            
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}            
-          package: '*.jar'  
+    - name: Upload artifact for deployment job  
+      uses: actions/upload-artifact@v4  
+      with:  
+        name: java-app  
+        path: 'bookfull/build/libs/*.jar'  # 필요에 따라 경로 조정  
+  
+  deploy:  
+    permissions:  
+      contents: none  
+    runs-on: ubuntu-latest  
+    needs: build  
+  
+    steps:  
+    - name: Download artifact from build job  
+      uses: actions/download-artifact@v4  
+      with:  
+        name: java-app  
+  
+    - name: Deploy to Azure Web App  
+      id: deploy-to-webapp  
+      uses: azure/webapps-deploy@v2  
+      with:  
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}  
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  
+        package: 'bookfull/build/libs/*.jar'  # 필요에 따라 경로 조정  
