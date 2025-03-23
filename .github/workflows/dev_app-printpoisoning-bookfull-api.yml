@@ -1,52 +1,62 @@
-name: Build and Deploy to Azure App Service  
+name: Build and deploy JAR app to Azure Web App - app-printpoisoning-bookfull-api  
   
 on:  
   push:  
     branches:  
-      - dev  # dev 브랜치에 푸시될 때 트리거  
+      - dev  
+  workflow_dispatch:  
   
 jobs:  
   build:  
-    runs-on: ubuntu-latest  
+    runs-on: windows-latest  
+    permissions:  
+      contents: read # This is required for actions/checkout  
   
     steps:  
-    - name: Checkout repository  
-      uses: actions/checkout@v2  
+      - uses: actions/checkout@v4  
   
-    - name: Set up JDK 21  
-      uses: actions/setup-java@v1  
-      with:  
-        java-version: '21'  
+      - name: Set up Java version  
+        uses: actions/setup-java@v4  
+        with:  
+          java-version: '21'  
+          distribution: 'microsoft'  
   
-    - name: Grant execute permission for gradlew  
-      run: chmod +x gradlew  
+      - name: Build with Gradle  
+        run: ./gradlew build  
   
-    - name: Build with Gradle  
-      run: ./gradlew build  
-  
-    - name: Upload artifact for deployment job  
-      uses: actions/upload-artifact@v2  
-      with:  
-        name: build-artifact  
-        path: build/libs/**/*.jar  
+      - name: Upload artifact for deployment job  
+        uses: actions/upload-artifact@v4  
+        with:  
+          name: java-app  
+          path: build/libs/*.jar  
   
   deploy:  
-    runs-on: ubuntu-latest  
+    runs-on: windows-latest  
     needs: build  
+    environment:  
+      name: 'Production'  
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}  
+    permissions:  
+      id-token: write # This is required for requesting the JWT  
+      contents: read # This is required for actions/checkout  
   
     steps:  
-    - name: Download artifact from build job  
-      uses: actions/download-artifact@v2  
-      with:  
-        name: build-artifact  
+      - name: Download artifact from build job  
+        uses: actions/download-artifact@v4  
+        with:  
+          name: java-app  
   
-    - name: 'Login to Azure'  
-      uses: azure/login@v1  
-      with:  
-        creds: ${{ secrets.AZURE_CREDENTIALS }}  
+      - name: Login to Azure  
+        uses: azure/login@v2  
+        with:  
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_FF5507E43D854914BD12CD6568F8E1D9 }}  
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_5E26B0F1EB7146908F56289CCC9DE8D6 }}  
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C7C48FA2B0E545908A9676C5301BEAE1 }}  
   
-    - name: 'Deploy to Azure WebApp'  
-      uses: azure/webapps-deploy@v2  
-      with:  
-        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}  
-        package: '*.jar'  
+      - name: Deploy to Azure Web App  
+        id: deploy-to-webapp  
+        uses: azure/webapps-deploy@v3  
+        with:  
+          app-name: 'app-printpoisoning-bookfull-api'  
+          slot-name: 'Production'  
+          package: '*.jar'  
