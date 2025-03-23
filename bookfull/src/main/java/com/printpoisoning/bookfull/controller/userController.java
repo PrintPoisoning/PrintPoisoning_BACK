@@ -6,11 +6,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.printpoisoning.bookfull.dto.request.UserAddReqDTO;
+import com.printpoisoning.bookfull.dto.request.UserUpdateReqDTO;
 import com.printpoisoning.bookfull.dto.response.UserAddResDTO;
 import com.printpoisoning.bookfull.entity.User;
 import com.printpoisoning.bookfull.service.UserService;
@@ -40,6 +42,24 @@ public class userController {
 
         return new ResponseEntity<>(userAddResDTO, HttpStatus.CREATED);
     } 
+
+    @PutMapping("")  
+    @Operation(summary = "updateUser", description = "회원 수정 API")  
+    public ResponseEntity<UserAddResDTO> updateUser(@Validated @RequestBody UserUpdateReqDTO userUpdateReqDTO) {  
+    
+        String email = "jhseo@gmail.com"; // 수정 예정 
+        
+        User updatedUser = userService.updateUser(userUpdateReqDTO, email);  
+    
+        UserAddResDTO userAddResDTO = new UserAddResDTO();  
+        userAddResDTO.setUserId(updatedUser.getEmail());  
+        userAddResDTO.setNickname(updatedUser.getNickname());  
+        userAddResDTO.setBirthdate(updatedUser.getBirthdate());  
+        userAddResDTO.setIsPublic(updatedUser.getIsPublic());  
+        userAddResDTO.setGender(updatedUser.getGender());  
+        
+        return new ResponseEntity<>(userAddResDTO, HttpStatus.OK);  
+    }  
 
     // @RequestHeader("Authorization") String token
     @DeleteMapping("")  

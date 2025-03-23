@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.printpoisoning.bookfull.dto.request.UserAddReqDTO;
+import com.printpoisoning.bookfull.dto.request.UserUpdateReqDTO;
 import com.printpoisoning.bookfull.entity.User;
 import com.printpoisoning.bookfull.repository.UserRepository;
 @Service  
@@ -32,6 +33,28 @@ public class UserService {
         return userRepository.save(user); 
 
     }
+
+    public User updateUser(UserUpdateReqDTO userUpdateReqDTO, String email) {  
+        User user = userRepository.findByEmail(email);  
+        if (user != null) {  
+            if (userUpdateReqDTO.getNickname() != null) {  
+                user.setNickname(userUpdateReqDTO.getNickname());  
+            }  
+            if (userUpdateReqDTO.getBirthdate() != null) {  
+                user.setBirthdate(userUpdateReqDTO.getBirthdate());  
+            }  
+            if (userUpdateReqDTO.getIsPublic() != null) {  
+                user.setIsPublic(userUpdateReqDTO.getIsPublic());  
+            }  
+            if (userUpdateReqDTO.getGender() != null) {  
+                user.setGender(userUpdateReqDTO.getGender());  
+            }  
+            return userRepository.save(user);  
+        } else {  
+            // 예외 처리 또는 오류 응답 리턴  
+            throw new RuntimeException("User not found with email: " + email);  
+        } 
+    } 
 
     public User getUserByEmail(String email) {  
         return userRepository.findByEmail(email);  
