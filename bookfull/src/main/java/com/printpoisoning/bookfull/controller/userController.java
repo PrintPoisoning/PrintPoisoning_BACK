@@ -26,8 +26,8 @@ public class userController {
     @Autowired  
     private UserService userService; 
   
-    @PostMapping("")  
-    @Operation(summary = "addUser", description = "회원가입 API")
+    @PostMapping("")   
+    @Operation(summary = "addUser", description = "회원 가입 API")
     public ResponseEntity<UserAddResDTO> addUser(@Validated @RequestBody UserAddReqDTO userAddReqDTO) {  
         User user = userService.createUser(userAddReqDTO);
         
@@ -43,7 +43,7 @@ public class userController {
 
     // @RequestHeader("Authorization") String token
     @DeleteMapping("")  
-    @Operation(summary = "deleteUser", description = "회원탈퇴 API")
+    @Operation(summary = "deleteUser", description = "회원 탈퇴 API")
     public String deleteUser() {  
         
         String email = "jhseo@gmail.com";
@@ -66,8 +66,21 @@ public class userController {
     } 
   
     @GetMapping("")  
-    @Operation(summary = "test", description = "이 API는 회원 가입, 회원 정보 수정, 회원 탈퇴, 내 정보 확인 등의 사용자 관리 기능을 지원합니다.")  
-    public String test() {  
-        return "TEST 입니다.";
+    @Operation(summary = "getMe", description = "내 정보 확인 API")  
+    public ResponseEntity<UserAddResDTO> getMe() {
+        
+        String email = "jhseo@gmail.com";
+
+        // 이메일로 사용자를 조회  
+        User user = userService.getUserByEmail(email);
+
+        UserAddResDTO userAddResDTO = new UserAddResDTO();
+        userAddResDTO.setUserId(user.getEmail());
+        userAddResDTO.setNickname(user.getNickname());
+        userAddResDTO.setBirthdate(user.getBirthdate());
+        userAddResDTO.setIsPublic(user.getIsPublic());
+        userAddResDTO.setGender(user.getGender());
+
+        return new ResponseEntity<>(userAddResDTO, HttpStatus.CREATED);  
     }  
-}  
+}
