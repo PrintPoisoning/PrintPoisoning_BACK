@@ -14,14 +14,7 @@ public class UserAddResDTO {
 
     @NotBlank  
     private String nickname;    
-  
-    @NotNull  
-    @Past  
-    private LocalDate birthdate;  
-    
-    @NotBlank
-    private String gender;
-  
+
     @NotNull  
     private Boolean isPublic;  
 
@@ -34,16 +27,8 @@ public class UserAddResDTO {
         return nickname;  
     }  
   
-    public LocalDate getBirthdate() {  
-        return birthdate;  
-    }  
-  
     public Boolean getIsPublic() {  
         return isPublic;  
-    }  
-  
-    public String getGender() {  
-        return gender;  
     }  
   
     // Setters  
@@ -55,15 +40,8 @@ public class UserAddResDTO {
         this.nickname = nickname;  
     }  
   
-    public void setBirthdate(LocalDate birthdate) {  
-        this.birthdate = birthdate;  
-    }  
-  
     public void setIsPublic(Boolean isPublic) {  
         this.isPublic = isPublic;  
     }  
 
-    public void setGender(String gender) {  
-        this.gender = gender;  
-    }  
 }  

@@ -29,7 +29,7 @@ public class User {
     @Column(nullable = true)  
     private LocalDate birthdate;  
   
-    @Column(nullable = false, length = 6)  
+    @Column(nullable = true, length = 6)  
     private String gender;  
   
     @Column(nullable = false)  
@@ -43,6 +43,13 @@ public class User {
   
     @Column(nullable = false)  
     private LocalDateTime updatedDate;  
+
+    @Column(length = 512, nullable = true)  
+    private String accessToken;  
+  
+    @Column(length = 512, nullable = true)  
+    private String refreshToken; 
+  
   
     // Getters and Setters
     
@@ -118,17 +125,33 @@ public class User {
     public void setUpdatedDate(LocalDateTime updatedDate) {  
         this.updatedDate = updatedDate;  
     } 
+    
+    public String getAccessToken() {  
+        return accessToken;  
+    }  
+
+    public void setAccessToken(String accessToken) {  
+        this.accessToken = accessToken;  
+    }  
+
+    public String getRefreshToken() {  
+        return refreshToken;  
+    }  
+
+    public void setRefreshToken(String refreshToken) {  
+        this.refreshToken = refreshToken;  
+    }  
   
     @PrePersist  
     protected void onCreate() {  
-        LocalDateTime nowKST = LocalDateTime.now().plusHours(9);  
+        LocalDateTime nowKST = LocalDateTime.now();    
         createdDate = nowKST;  
         updatedDate = nowKST;  
     }  
   
     @PreUpdate  
     protected void onUpdate() {  
-        updatedDate = LocalDateTime.now().plusHours(9);  
+        updatedDate = LocalDateTime.now();  
     }  
   
     // Constructors, Getters, and Setters omitted for brevity  
