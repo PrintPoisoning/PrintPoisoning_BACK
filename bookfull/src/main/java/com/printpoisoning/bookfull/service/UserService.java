@@ -29,6 +29,16 @@ public class UserService {
         }  
   
         // User Entity의 @PrePersist 메서드에 의해 생성일이 현재 시간으로 자동 설정됩니다.  
-        return userRepository.save(user);  
+        return userRepository.save(user); 
+
+    }
+
+    public User getUserByEmail(String email) {  
+        return userRepository.findByEmail(email);  
+    } 
+
+    public void deleteUser(User user) {  
+        userRepository.delete(user);  
     }  
+    
 }  
