@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-BookfullApplication<bookfull>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.printpoisoning.bookfull.BookfullApplication",
+            "projectName": "bookfull",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
