@@ -48,7 +48,10 @@ jobs:
       - name: List files in current directory for debugging  
         run: ls -al  
       - name: Move downloaded artifact to target directory  
-        run: mv *.jar app.jar  
+        run: |  
+          JAR_FILE=$(ls *.jar)  
+          echo "Found JAR file: $JAR_FILE"  
+          mv "$JAR_FILE" app.jar  
       - name: Login to Azure  
         uses: azure/login@v2  
         with:  
