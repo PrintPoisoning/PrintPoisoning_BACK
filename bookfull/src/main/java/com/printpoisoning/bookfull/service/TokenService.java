@@ -26,7 +26,7 @@ public class TokenService {
     private String REFRESH_JWT_SECRET_KEY;  
 
     private static final long ACCESS_TOKEN_EXPIRE_MINUTES = 60;   // 60분  
-    private static final long REFRESH_TOKEN_EXPIRE_MINUTES = 1440; // 24시간  
+    private static final long REFRESH_TOKEN_EXPIRE_MINUTES = 600; // 10시간  
   
     public String createToken(Map<String, Object> data, String tokenType) {  
         SecretKey secretKey;  
