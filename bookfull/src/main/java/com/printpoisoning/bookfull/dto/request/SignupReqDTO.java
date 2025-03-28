@@ -1,13 +1,11 @@
 package com.printpoisoning.bookfull.dto.request;  
-import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import lombok.Data;  
   
 @Data  
-public class UserAddReqDTO {  
+public class SignupReqDTO {  
   
     @NotBlank  
     private String nickname;    
@@ -16,7 +14,7 @@ public class UserAddReqDTO {
     private Boolean isPublic;  
 
     @NotBlank  
-    private String token;
+    private String kakaoToken;
 
     // Getters  
     public String getNickname() {  
@@ -27,8 +25,8 @@ public class UserAddReqDTO {
         return isPublic;  
     }  
 
-    public String getToken(){
-        return token;
+    public String getKakaoToken(){
+        return kakaoToken;
     }
 
     // Setters  
@@ -40,8 +38,8 @@ public class UserAddReqDTO {
         this.isPublic = isPublic;  
     }  
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setKakaoToken(String kakaoToken) {
+        this.kakaoToken = kakaoToken;
     }
 
 }  

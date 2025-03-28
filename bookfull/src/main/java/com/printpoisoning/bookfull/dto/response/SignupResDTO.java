@@ -1,13 +1,11 @@
-package com.printpoisoning.bookfull.dto.response;  
-import java.time.LocalDate;
+package com.printpoisoning.bookfull.dto.response; 
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import lombok.Data; 
   
 @Data  
-public class UserAddResDTO {  
+public class SignupResDTO {  
   
     @NotBlank  
     private String userId; 

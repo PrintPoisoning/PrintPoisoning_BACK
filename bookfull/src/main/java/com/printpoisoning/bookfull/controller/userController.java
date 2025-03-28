@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.printpoisoning.bookfull.dto.request.UserAddReqDTO;
+import com.printpoisoning.bookfull.dto.request.SignupReqDTO;
 import com.printpoisoning.bookfull.dto.request.UserUpdateReqDTO;
 import com.printpoisoning.bookfull.dto.response.KakaoUserResDTO;
-import com.printpoisoning.bookfull.dto.response.UserAddResDTO;
+import com.printpoisoning.bookfull.dto.response.SignupResDTO;
 import com.printpoisoning.bookfull.dto.response.UserDeleteResDTO;
 import com.printpoisoning.bookfull.dto.response.NicknameCheckResDTO;
 import com.printpoisoning.bookfull.entity.User;
@@ -44,54 +44,16 @@ public class userController {
     @Autowired  
     private UserService userService; 
   
-    @PostMapping("")   
-    @Operation(summary = "addUser", description = "회원 가입 API")
-    public ResponseEntity<UserAddResDTO> addUser(@Validated @RequestBody UserAddReqDTO userAddReqDTO) {  
-        // 토큰 값 추출  
-        String token = userAddReqDTO.getToken(); 
-        
-        // Kakao API를 사용하기 위해 RestTemplate 객체 생성  
-        RestTemplate restTemplate = new RestTemplate();  
-  
-        String url = "https://kapi.kakao.com/v2/user/me";  
-          
-        // HTTP headers 설정  
-        HttpHeaders headers = new HttpHeaders();  
-        headers.set("Authorization", "Bearer " + token);  
-          
-        HttpEntity<String> entity = new HttpEntity<>(headers);  
-  
-        // Kakao API 호출 및 응답 받기  
-        ResponseEntity<KakaoUserResDTO> response = restTemplate.exchange(url, HttpMethod.GET, entity, KakaoUserResDTO.class);  
-          
-        // 응답을 바탕으로 사용자 정보를 UserAddReqDTO 객체에 매핑  
-        KakaoUserResDTO kakaoUser = response.getBody();  
-          
-        if (kakaoUser == null) {  
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);  
-        }  
-
-        String email = kakaoUser.getKakao_account().getEmail();
-
-        User user = userService.createUser(userAddReqDTO, email);
-        
-        UserAddResDTO userAddResDTO = new UserAddResDTO();
-        userAddResDTO.setUserId(user.getEmail());
-        userAddResDTO.setNickname(user.getNickname());
-        userAddResDTO.setIsPublic(user.getIsPublic());
-
-        return new ResponseEntity<>(userAddResDTO, HttpStatus.CREATED);
-    } 
 
     @PutMapping("")  
     @Operation(summary = "updateUser", description = "회원 수정 API")  
-    public ResponseEntity<UserAddResDTO> updateUser(HttpServletRequest request, @Validated @RequestBody UserUpdateReqDTO userUpdateReqDTO) {  
+    public ResponseEntity<SignupResDTO> updateUser(HttpServletRequest request, @Validated @RequestBody UserUpdateReqDTO userUpdateReqDTO) {  
         
         String email = tokenService.getUserEmailFromAccessToken(request);
 
         User updatedUser = userService.updateUser(userUpdateReqDTO, email);  
     
-        UserAddResDTO userAddResDTO = new UserAddResDTO();  
+        SignupResDTO userAddResDTO = new SignupResDTO();  
         userAddResDTO.setUserId(updatedUser.getEmail());  
         userAddResDTO.setNickname(updatedUser.getNickname());  
         userAddResDTO.setIsPublic(updatedUser.getIsPublic());  
@@ -126,14 +88,14 @@ public class userController {
   
     @GetMapping("")  
     @Operation(summary = "getMe", description = "내 정보 확인 API")  
-    public ResponseEntity<UserAddResDTO> getMe(HttpServletRequest request) {
+    public ResponseEntity<SignupResDTO> getMe(HttpServletRequest request) {
         
         String email = tokenService.getUserEmailFromAccessToken(request);
 
         // 이메일로 사용자를 조회  
         User user = userService.getUserByEmail(email);
 
-        UserAddResDTO userAddResDTO = new UserAddResDTO();
+        SignupResDTO userAddResDTO = new SignupResDTO();
         userAddResDTO.setUserId(user.getEmail());
         userAddResDTO.setNickname(user.getNickname());
         userAddResDTO.setIsPublic(user.getIsPublic());

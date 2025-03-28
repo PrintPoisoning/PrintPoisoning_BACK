@@ -3,7 +3,7 @@ package com.printpoisoning.bookfull.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.printpoisoning.bookfull.dto.request.UserAddReqDTO;
+import com.printpoisoning.bookfull.dto.request.SignupReqDTO;
 import com.printpoisoning.bookfull.dto.request.UserUpdateReqDTO;
 import com.printpoisoning.bookfull.dto.response.LoginResDTO;
 import com.printpoisoning.bookfull.entity.User;
@@ -14,7 +14,7 @@ public class UserService {
     @Autowired  
     private UserRepository userRepository;  
   
-    public User createUser(UserAddReqDTO userDTO, String email) {    
+    public User createUser(SignupReqDTO userDTO, String email) {    
         
         User user = new User();  
         user.setNickname(userDTO.getNickname());  
