@@ -49,7 +49,7 @@ public class userController {
     @Operation(summary = "updateUser", description = "회원 수정 API")  
     public ResponseEntity<SignupResDTO> updateUser(HttpServletRequest request, @Validated @RequestBody UserUpdateReqDTO userUpdateReqDTO) {  
         
-        String email = tokenService.getUserEmailFromAccessToken(request);
+        String email = tokenService.getUserEmailFromAccessToken(request).toString();
 
         User updatedUser = userService.updateUser(userUpdateReqDTO, email);  
     
@@ -65,7 +65,7 @@ public class userController {
     @Operation(summary = "deleteUser", description = "회원 탈퇴 API")
     public ResponseEntity<UserDeleteResDTO> deleteUser(HttpServletRequest request) {  
         
-        String email = tokenService.getUserEmailFromAccessToken(request);
+        String email = tokenService.getUserEmailFromAccessToken(request).toString();
 
         // 이메일로 사용자를 조회  
         User user = userService.getUserByEmail(email); 
@@ -90,7 +90,7 @@ public class userController {
     @Operation(summary = "getMe", description = "내 정보 확인 API")  
     public ResponseEntity<SignupResDTO> getMe(HttpServletRequest request) {
         
-        String email = tokenService.getUserEmailFromAccessToken(request);
+        String email = tokenService.getUserEmailFromAccessToken(request).toString();
 
         // 이메일로 사용자를 조회  
         User user = userService.getUserByEmail(email);

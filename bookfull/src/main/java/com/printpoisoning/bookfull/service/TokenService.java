@@ -1,6 +1,8 @@
 package com.printpoisoning.bookfull.service;
-import io.jsonwebtoken.Claims;  
-import io.jsonwebtoken.Jws;  
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;  
 import io.jsonwebtoken.security.Keys;  
 import io.jsonwebtoken.SignatureAlgorithm;  
@@ -13,7 +15,8 @@ import javax.crypto.SecretKey;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;  
 import java.time.ZoneId;  
-import java.util.Date;  
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;  
   
 @Service  
@@ -25,8 +28,8 @@ public class TokenService {
     @Value("${jwt.refresh.secret.key}")  
     private String REFRESH_JWT_SECRET_KEY;  
 
-    private static final long ACCESS_TOKEN_EXPIRE_MINUTES = 60;   // 60분  
-    private static final long REFRESH_TOKEN_EXPIRE_MINUTES = 600; // 10시간  
+    private static final long ACCESS_TOKEN_EXPIRE_MINUTES = 1;   // 60분  
+    private static final long REFRESH_TOKEN_EXPIRE_MINUTES = 5; // 10시간  
   
     public String createToken(Map<String, Object> data, String tokenType) {  
         SecretKey secretKey;  
@@ -60,7 +63,32 @@ public class TokenService {
                 .signWith(secretKey, SignatureAlgorithm.HS256)  
                 .compact();  
     }  
+    
+    public Map<String, Object> parseToken(String token, String tokenType) {  
+        SecretKey secretKey;  
   
+        if ("access".equals(tokenType)) {  
+            secretKey = Keys.hmacShaKeyFor(JWT_SECRET_KEY.getBytes());  
+        } else if ("refresh".equals(tokenType)) {  
+            secretKey = Keys.hmacShaKeyFor(REFRESH_JWT_SECRET_KEY.getBytes());  
+        } else {  
+            throw new IllegalArgumentException("Invalid token type: " + tokenType);  
+        }  
+  
+        try {  
+            Claims claims = Jwts.parserBuilder()  
+                    .setSigningKey(secretKey)  
+                    .build()  
+                    .parseClaimsJws(token)  
+                    .getBody();  
+            return new HashMap<>(claims);  
+        } catch (ExpiredJwtException e) {  
+            throw new IllegalArgumentException("Token expired", e);  
+        } catch (JwtException e) {  
+            throw new IllegalArgumentException("Invalid token", e);  
+        }  
+    }  
+
     public String getUserEmailFromAccessToken(HttpServletRequest request) {  
         String token = request.getHeader("Authorization");  
       
