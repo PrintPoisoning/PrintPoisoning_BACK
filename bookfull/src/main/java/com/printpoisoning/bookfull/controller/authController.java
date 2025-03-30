@@ -171,14 +171,18 @@ public class authController {
         Map<String, Object> data = new HashMap<>();  
         String email = (String) claims.get("email"); // 원래 데이터에서 필요한 필드 복사  
         data.put("email", email);  
-        String newAccessToken = tokenService.createToken(data, "access");  
+
+        String newAccessToken = tokenService.createToken(data, "access");
+        String newRefreshToken = tokenService.createToken(data, "refresh");
         
         Map<String, String> response = new HashMap<>();  
         response.put("accessToken", newAccessToken); 
+        response.put("refreshToken", newRefreshToken);
         
         LoginResDTO loginResDTO = new LoginResDTO();
 
         loginResDTO.setAccessToken(newAccessToken);
+        loginResDTO.setRefreshToken(newRefreshToken);
         userService.updateUser(loginResDTO, email); 
 
         return ResponseEntity.ok(response);  
