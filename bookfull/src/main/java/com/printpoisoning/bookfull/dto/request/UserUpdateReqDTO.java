@@ -1,7 +1,5 @@
 package com.printpoisoning.bookfull.dto.request;  
-import java.time.LocalDate;
 
-import jakarta.validation.constraints.Past;
 import lombok.Data;  
   
 @Data  
