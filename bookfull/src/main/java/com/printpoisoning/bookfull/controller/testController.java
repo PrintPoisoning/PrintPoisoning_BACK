@@ -21,6 +21,6 @@ public class testController {
     public ResponseEntity<ErrorCodeResDTO> test() {  
         ErrorCodeResDTO errorCodeResDTO = new ErrorCodeResDTO();
         errorCodeResDTO.setErrorCode("1002230");
-        return new ResponseEntity<>(errorCodeResDTO, HttpStatus.OK);
+        return new ResponseEntity<>(errorCodeResDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }  
 }  
